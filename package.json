@@ -1,0 +1,19 @@
+{
+  "name": "apl-back-doe-mais-ong",
+  "version": "1.0.0",
+  "description": "backend da ONG doe mais",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Huguito3/apl-back-doe-mais-ong.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Huguito3/apl-back-doe-mais-ong/issues"
+  },
+  "homepage": "https://github.com/Huguito3/apl-back-doe-mais-ong#readme"
+}
