@@ -5,6 +5,7 @@ BackEnd da ONG Doe Mais.
 ## Construindo de 0
 ```bash
 npm init
+npm install express --save
 ```
 
 ## Installation
