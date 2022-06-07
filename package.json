@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "swagger-autogen": "node ./swagger.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.5",
     "serve-index": "^1.9.1",
+    "swagger-ui-express": "^4.4.0",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.21.3"
   }
 }

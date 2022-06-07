@@ -30,3 +30,4 @@ npm run start:dev
 [Uuid] (https://www.npmjs.com/package/uuid), for the creation of RFC4122 UUIDs.  
 [Serve-Index] (https://github.com/expressjs/serve-index), Serves pages that contain directory listings for a given path.  
 [Google-Sign-in] (https://developers.google.com/identity/sign-in/web/backend-auth), Google Authentication.  
+[Swagger] (https://www.npmjs.com/package/swagger-autogen), Swagger. URL + /doc. 

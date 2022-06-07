@@ -19,11 +19,11 @@ const CampanhaSchema = Schema(
     dataInicio: { type: Date },
     dataFinal: { type: Date },
     image: { type: String },
-    // usuario: {
-    //   required: true,
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Usuario",
-    // },--> Associar ONG
+    ong: {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "Ong",
+    }
   },
   //Si no colocamos esto, coloca el plural en ingles del nombre del esquema Hospitals.
   { collection: "campanhas" }

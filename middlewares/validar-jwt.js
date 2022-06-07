@@ -87,8 +87,68 @@ const validarAdminRoleOMismoUsuario = async (req, res, next) => {
   }
 };
 
+const validarAdminRoleONG = async (req, res, next) => {
+  const uid = req.uid;
+  console.log(uid);
+  try {
+    const ongDb = await Ong.findById(uid);
+    if (!ongDb) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Ong no existe",
+      });
+    }
+    if (ongDb.role !== "ADMIN_ROLE") {
+      return res.status(403).json({
+        ok: false,
+        msg: "No tiene privilegios para realizar la tarea",
+      });
+    }
+  } catch (error) {
+    return res.status(404).json({
+      ok: false,
+      msg: "Hable con el administrador",
+    });
+  }
+};
+
+const validarAdminRoleOMismoOng = async (req, res, next) => {
+  // l uid es el uid del token, o sea del Ong que hiso el login.
+  const uid = req.uid;
+  // este id es el id que viene en la url, o sea el Ong que estoy queriendo modificar
+  const id = req.params.uid;
+  console.log(id);
+  try {
+    const ongDb = await Ong.findById(uid);
+    if (!ongDb) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Ong no existe",
+      });
+    }
+    console.log(uid);
+    console.log(id);
+    if (ongDb.role === "ADMIN_ROLE" || uid === id) {
+      next();
+
+    } else {
+      return res.status(403).json({
+        ok: false,
+        msg: "No tiene privilegios para realizar la tarea",
+      });
+    }
+  } catch (error) {
+    return res.status(404).json({
+      ok: false,
+      msg: "Hable con el administrador",
+    });
+  }
+};
+
 module.exports = {
   validarJWT,
   validarAdminRole,
   validarAdminRoleOMismoUsuario,
+  validarAdminRoleOMismoOng,
+  validarAdminRoleONG
 };
