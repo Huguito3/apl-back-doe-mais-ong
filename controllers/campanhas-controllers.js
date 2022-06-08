@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
 const Campanha = require("../models/campanha");
 
+
+
 const getCampanhas = async (req, res = response) => {
   const campanhas = await Campanha.find().populate("ong", "nombre image");
 

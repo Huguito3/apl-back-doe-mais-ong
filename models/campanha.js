@@ -16,8 +16,8 @@ const CampanhaSchema = Schema(
     },
     longitud: { type: String },
     latitud: { type: String },
-    dataInicio: { type: Date },
-    dataFinal: { type: Date },
+    dataInicio: { type: String },
+    dataFinal: { type: String },
     image: { type: String },
     ong: {
       required: true,
