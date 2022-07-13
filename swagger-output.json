@@ -22,7 +22,7 @@
             "type": "string"
           },
           {
-            "name": "x-token",
+            "name": "access_token",
             "in": "header",
             "type": "string"
           }
@@ -46,7 +46,7 @@
             "type": "string"
           },
           {
-            "name": "x-token",
+            "name": "access_token",
             "in": "header",
             "type": "string"
           },
@@ -100,7 +100,7 @@
             "type": "string"
           },
           {
-            "name": "x-token",
+            "name": "access_token",
             "in": "header",
             "type": "string"
           }
@@ -162,7 +162,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "x-token",
+            "name": "access_token",
             "in": "header",
             "type": "string"
           }
@@ -194,7 +194,7 @@
             "type": "string"
           },
           {
-            "name": "x-token",
+            "name": "access_token",
             "in": "header",
             "type": "string"
           }

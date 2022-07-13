@@ -11,7 +11,7 @@ const {
 } = require("../controllers/campanhas-controllers");
 
 const { validarCampos } = require("../middlewares/validar-campos");
-const { validarJWT } = require("../middlewares/validar-jwt");
+const { validarJWT, validarUserOng} = require("../middlewares/validar-jwt");
 const router = Router();
 
 router.get("/", validarJWT, getCampanhas);
@@ -21,6 +21,7 @@ router.post(
     validarJWT,
     check("nombre", "O nome da Campanha é necessario").not().isEmpty(),
     validarCampos,
+    validarUserOng
   ],
   createCampanha
 );

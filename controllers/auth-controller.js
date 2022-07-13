@@ -34,7 +34,7 @@ const login = async (req, res = response) => {
     res.json({
       ok: true,
       token: token,
-      menu: getMenuFrontEnd(usuarioDB.role)
+      // menu: getMenuFrontEnd(usuarioDB.role)
     });
   } catch (error) {
     console.log(error);

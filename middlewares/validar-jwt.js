@@ -5,7 +5,8 @@ const Usuario = require("../models/usuario");
 // A importação do request, e so para importar o modelo do parametro. Ajuda a vr os metodos que tem.
 const validarJWT = (req = request, res, next) => {
   //Leer el token..Nombre que le voy a dar en el header.
-  const token = req.header("x-token");
+  // const token = req.header("x-token"); 
+  const token = req.header("access_token");
   if (!token) {
     return res.status(404).json({
       ok: false,
@@ -145,10 +146,34 @@ const validarAdminRoleOMismoOng = async (req, res, next) => {
   }
 };
 
+
+const validarUserOng = async (req, res, next) => {
+  // l uid es el uid del token, o sea del Ong que hizo el login.
+  const uid = req.uid;
+  console.log(uid);
+  try {
+    const ongDb = await Ong.findById(uid);
+    console.log(ongDb);
+    if (!ongDb) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Ong no existe",
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(404).json({
+      ok: false,
+      msg: "Hable con el administrador",
+    });
+  }
+};
+
 module.exports = {
   validarJWT,
   validarAdminRole,
   validarAdminRoleOMismoUsuario,
   validarAdminRoleOMismoOng,
-  validarAdminRoleONG
+  validarAdminRoleONG,
+  validarUserOng
 };
