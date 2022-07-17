@@ -19,8 +19,8 @@ dbConnection();
 app.use(express.static("public"));
 
 //Rutas
-app.use("/api/usuarios", require("./routes/usuarios-routes"));
-app.use("/api/login", require("./routes/auth-routes"));
+app.use("/usuario", require("./routes/usuarios-routes"));
+app.use("/usuario/login", require("./routes/auth-routes"));
 app.use("/api/ong/login", require("./routes/auth-ong-routes"));
 app.use("/api/upload", require("./routes/upload-routes"));
 app.use("/api/ong", require("./routes/ong-routes"));

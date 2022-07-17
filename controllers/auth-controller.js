@@ -5,7 +5,7 @@ const { generarJWT } = require("../helpers/jwt");
 const { getMenuFrontEnd } = require("../helpers/menu-fronted");
 
 const login = async (req, res = response) => {
-  const { password, email } = req.body;
+  const { senha, email } = req.body;
 
   try {
     const usuarioDB = await Usuario.findOne({ email });
@@ -19,9 +19,9 @@ const login = async (req, res = response) => {
     }
 
     //Verificar Contrasena
-    const validPassword = bcrypt.compareSync(password, usuarioDB.password);
+    const validsenha = bcrypt.compareSync(senha, usuarioDB.senha);
 
-    if (!validPassword) {
+    if (!validsenha) {
       return res.status(400).json({
         ok: false,
         msg: "contrasena no valida",
@@ -34,6 +34,7 @@ const login = async (req, res = response) => {
     res.json({
       ok: true,
       token: token,
+      usuario: usuarioDB
       // menu: getMenuFrontEnd(usuarioDB.role)
     });
   } catch (error) {
@@ -56,7 +57,7 @@ const renewToken = async (req, res = response) => {
     ok: true,
     token: token,
     usuario,
-    menu: getMenuFrontEnd(usuario.role)
+    // menu: getMenuFrontEnd(usuario.role)
   });
 };
 

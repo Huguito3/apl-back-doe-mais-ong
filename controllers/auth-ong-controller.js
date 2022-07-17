@@ -56,7 +56,7 @@ const renewToken = async (req, res = response) => {
     ok: true,
     token: token,
     ong,
-    menu: getMenuFrontEnd(ong.role)
+    // menu: getMenuFrontEnd(ong.role)
   });
 };
 
