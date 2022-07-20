@@ -13,6 +13,18 @@ const UsuarioSchema = Schema({
   nascimento: { type: String },
   sexo: { type: String },
   contato: { type: String },
+  favoritos:[
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Ong",
+    },
+  ],
+  apoios:[
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Campanha",
+    },
+  ],
 });
 
 //Revisar docuemntacao mongoose. Desestructuramos el reotnro del json del mongo, trae datos como la version, que no la queremos

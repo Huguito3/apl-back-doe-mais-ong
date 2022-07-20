@@ -7,15 +7,26 @@ const { actualizarImagen } = require("../helpers/actualizar-imagenes");
 
 const fileUpload = async (req = request, res = response) => {
   const tipo = req.params.tipo;
+  const subTipo = req.params.subtipo;
   const id = req.params.id;
 
-  const tiposValidos = ["usuarios","campanhas/avatar","campanhas/galeria"];
+  const tiposValidos = ["usuarios", "campanhas", "ong"];
+  const subtiposValidos = ["avatar", "galeria"];
 
   if (!tiposValidos.includes(tipo)) {
     return res.status(400).json({
       ok: false,
       msg: "No hay ningun archivo",
     });
+  }
+
+  if (!(tipo === "usuarios")) {
+    if (!subtiposValidos.includes(subTipo)) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Subtipo no valido(avatar ou galeria)",
+      });
+    }
   }
 
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -44,10 +55,13 @@ const fileUpload = async (req = request, res = response) => {
   //Ahora precisamos generar un uid unico, para no tener problemas con los nombres de los archivos.
 
   const nombreArchivo = `${uuidv4()}.${extensionArchivo}`;
-
+  let path = "";
   //Path para guardar la imagen
-
-  const path = `./uploads/${tipo}/${nombreArchivo}`;
+  if (tipo === "usuarios") {
+    path = `./uploads/${tipo}/${nombreArchivo}`;
+  }else{
+    path = `./uploads/${tipo}/${subTipo}/${nombreArchivo}`;
+  }
 
   //Para mover la pagina dentro de las carpetas. Podriamso tal vez usar un serviço tipo amazon de bucket para guardar las imagenes
   // Use the mv() method to place the file somewhere on your server
@@ -60,7 +74,7 @@ const fileUpload = async (req = request, res = response) => {
       });
     }
 
-    actualizarImagen(tipo, id, nombreArchivo);
+    actualizarImagen(tipo, subTipo,id, nombreArchivo);
 
     res.json({
       ok: true,
@@ -72,13 +86,14 @@ const fileUpload = async (req = request, res = response) => {
 
 const retornoImagen = (req, res = response) => {
   const tipo = req.params.tipo;
+  const subtipo = req.params.subtipo;
   const foto = req.params.foto;
-  const pathImg = pathnode.join(__dirname, `../uploads/${tipo}/${foto}`);
+  const pathImg = pathnode.join(__dirname, `../uploads/${tipo}/${subtipo}/${foto}`);
 
   if (fs.existsSync(pathImg)) {
     res.sendFile(pathImg);
-  }else{
-    const pathImg = pathnode.join(__dirname, '../uploads/no-img.jpg');
+  } else {
+    const pathImg = pathnode.join(__dirname, "../uploads/no-img.jpg");
     res.sendFile(pathImg);
   }
 };

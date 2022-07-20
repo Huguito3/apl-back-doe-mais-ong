@@ -9,6 +9,7 @@ const {
     createCampanha,
     updateCampanha,
     deleteCampanha,
+    apoiarCampanha
 } = require("../controllers/campanhas-controllers");
 
 const { validarCampos } = require("../middlewares/validar-campos");
@@ -26,6 +27,16 @@ router.post(
     validarUserOng
   ],
   createCampanha
+);
+
+router.post(
+  "/apoiar",
+  [
+    validarJWT,
+    check("id", "O id da Campanha é necessario").not().isEmpty(),
+    validarCampos,
+  ],
+  apoiarCampanha
 );
 
 router.put(

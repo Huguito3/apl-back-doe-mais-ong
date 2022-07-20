@@ -1,6 +1,7 @@
 const fs = require("fs");
 
 const Usuario = require("../models/usuario");
+const Campanha = require("../models/campanha");
 
 const borrarImagen = (pathViejo) => {
   if (fs.existsSync(pathViejo)) {
@@ -8,11 +9,10 @@ const borrarImagen = (pathViejo) => {
     fs.unlinkSync(pathViejo);
   }
 };
-const actualizarImagen = async (tipo, id, nombreArchivo) => {
+const actualizarImagen = async (tipo, subtipo, id, nombreArchivo) => {
   let pathViejo = "";
 
   switch (tipo) {
-    
     case "usuarios":
       const usuario = await Usuario.findById(id);
       console.log(usuario);
@@ -28,7 +28,25 @@ const actualizarImagen = async (tipo, id, nombreArchivo) => {
       await usuario.save();
       return true;
       break;
-   
+    case "campanhas":
+      const campanha = await Campanha.findById(id);
+      console.log(campanha);
+      if (!campanha) {
+        console.log("Não existe essa campanha");
+        return false;
+      }
+
+      if (subtipo === "avatar" && campanha.imagens.avatar !== "") {
+        pathViejo = `./uploads/campanhas/avatar/${campanha.imagens.avatar}`;
+        borrarImagen(pathViejo);
+        campanha.imagens.avatar = nombreArchivo;
+      } else {
+        campanha.imagens.galeria.push(nombreArchivo);
+      }
+
+      await campanha.save();
+      return true;
+      break;
     default:
       return false;
       break;

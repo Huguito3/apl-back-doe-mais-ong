@@ -2,6 +2,7 @@ const { response } = require("express");
 const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
 const Campanha = require("../models/campanha");
+const Usuario = require("../models/usuario");
 
 const getCampanhas = async (req, res = response) => {
   const campanhas = await Campanha.find().populate("ong", "nombre image");
@@ -122,10 +123,55 @@ const deleteCampanha = async (req, res = response) => {
   }
 };
 
+const apoiarCampanha = async (req, res = response) => {
+  const _id = req.body.id;
+  const uid = req.uid;
+  try {
+    const campanha = await Campanha.findById(_id);
+    if (!campanha) {
+      res.status(404).json({
+        ok: false,
+        msg: "El Id no correspodne a una Campanha de la base",
+      });
+    }
+
+    campanha.apoiadores += 1;
+
+    const usuarioDB = await Usuario.findById(uid);
+    if (!usuarioDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Usuario no encontrado",
+      });
+    }
+
+    usuarioDB.apoios.push(_id);
+    await Usuario.findByIdAndUpdate(uid, usuarioDB, {
+      new: true,
+    });
+
+    const campanhaAtualizado = await Campanha.findByIdAndUpdate(_id, campanha, {
+      new: true,
+    });
+
+    res.json({
+      ok: true,
+      campanha: campanhaAtualizado,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error Inesperado.. revisar logs",
+    });
+  }
+};
+
 module.exports = {
   getCampanhas,
   getCampanha,
   createCampanha,
   updateCampanha,
   deleteCampanha,
+  apoiarCampanha,
 };
