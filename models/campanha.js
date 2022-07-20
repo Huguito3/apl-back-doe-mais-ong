@@ -2,7 +2,12 @@ const { Schema, model } = require("mongoose");
 
 const CampanhaSchema = Schema(
   {
-    nombre: {
+    ong: {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "Ong",
+    },
+    nome: {
       type: String,
       required: true,
     },
@@ -10,25 +15,43 @@ const CampanhaSchema = Schema(
       type: String,
       required: true,
     },
-    endereco: {
-      type: String,
-      required: true,
+    imagens: {
+      avatar: { type: String },
+      galeria: [
+        {
+          type: String,
+        },
+      ],
     },
-    longitud: { type: String },
-    latitud: { type: String },
-    dataInicio: { type: String },
+    endereco: {
+      cep: { type: String },
+      logradouro: { type: String },
+      complemento: { type: String },
+      bairro: { type: String },
+      localidade: { type: String },
+      uf: { type: String },
+      latitude: { type: String },
+      longitude: { type: String },
+    },
+    apoiadores: { type: Number },
+    apoio: { type: Boolean }, //Isto é do usuario
+    agenda: {
+        atividade: [
+          {
+            type: Number,
+          },
+        ],
+        horaInicio: { type: String },
+        horaFim: { type: String },
+       },
+    dataInicial: { type: String },
     dataFinal: { type: String },
-    image: { type: String },
-    ong: {
-      required: true,
-      type: Schema.Types.ObjectId,
-      ref: "Ong",
-    }
+    categoria: { type: Number }, // trocar por tabelas especificas
+    status: { type: Number }
   },
   //Si no colocamos esto, coloca el plural en ingles del nombre del esquema Hospitals.
   { collection: "campanhas" }
 );
-
 
 CampanhaSchema.method("toJSON", function () {
   const { __v, ...object } = this.toObject();

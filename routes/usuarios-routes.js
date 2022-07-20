@@ -15,7 +15,8 @@ const {
 const { validarCampos } = require("../middlewares/validar-campos");
 const { validarJWT, validarAdminRole, validarAdminRoleOMismoUsuario} = require("../middlewares/validar-jwt");
 const router = Router();
-router.get("/:uid", validarJWT, getUsuario);
+// router.get("/:uid", validarJWT, getUsuario);/perfil
+router.get("/perfil", validarJWT, getUsuario);
 router.get("/", validarJWT, getUsuarios);
 // router.post("/", createUsuarios);
 // como queremos colocar vartios middlewares, colocamos un array.

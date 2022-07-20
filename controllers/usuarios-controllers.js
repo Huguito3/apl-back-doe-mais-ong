@@ -104,9 +104,6 @@ const actualizarUsuario = async (req, res = response) => {
 
 const actualizarUsuarioPropio = async (req, res = response) => {
   const uid = req.uid;
-  console.log("Entro en actualizar usuario");
-  console.log(uid);
-  console.log("---------------");
   try {
     const usuarioDB = await Usuario.findById(uid);
     if (!usuarioDB) {
@@ -160,9 +157,9 @@ const borrarUsuario = async (req, res = response) => {
 };
 
 const getUsuario = async (req, res = response) => {
-  const id = req.params.uid;
+  const uid = req.uid;
   try {
-    const usuario = await Usuario.findById(id);
+    const usuario = await Usuario.findById(uid);
     res.json({
       ok: true,
       usuario,

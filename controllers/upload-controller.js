@@ -9,7 +9,7 @@ const fileUpload = async (req = request, res = response) => {
   const tipo = req.params.tipo;
   const id = req.params.id;
 
-  const tiposValidos = ["usuarios"];
+  const tiposValidos = ["usuarios","campanhas/avatar","campanhas/galeria"];
 
   if (!tiposValidos.includes(tipo)) {
     return res.status(400).json({

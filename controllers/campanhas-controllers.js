@@ -3,8 +3,6 @@ const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
 const Campanha = require("../models/campanha");
 
-
-
 const getCampanhas = async (req, res = response) => {
   const campanhas = await Campanha.find().populate("ong", "nombre image");
 
@@ -12,6 +10,30 @@ const getCampanhas = async (req, res = response) => {
     ok: true,
     campanhas,
   });
+};
+
+const getCampanha = async (req, res = response) => {
+  const _id = req.params.uid;
+  // const campanha = await Campanha.find().populate("ong", "nombre image");
+  try {
+    const campanha = await Campanha.findById(_id);
+    if (!campanha) {
+      res.status(404).json({
+        ok: false,
+        msg: "El Id no correspodne a una campanha de la base",
+      });
+    }
+    res.json({
+      ok: true,
+      campanha,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error Inesperado.. revisar logs",
+    });
+  }
 };
 
 const createCampanha = async (req, res = response) => {
@@ -102,6 +124,7 @@ const deleteCampanha = async (req, res = response) => {
 
 module.exports = {
   getCampanhas,
+  getCampanha,
   createCampanha,
   updateCampanha,
   deleteCampanha,

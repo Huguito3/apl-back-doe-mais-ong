@@ -1,12 +1,13 @@
 const { request } = require("express");
 const jwt = require("jsonwebtoken");
 const Usuario = require("../models/usuario");
-
+const Ong = require("../models/ong");
 // A importação do request, e so para importar o modelo do parametro. Ajuda a vr os metodos que tem.
 const validarJWT = (req = request, res, next) => {
   //Leer el token..Nombre que le voy a dar en el header.
   // const token = req.header("x-token"); 
   const token = req.header("access_token");
+  console.log(token);
   if (!token) {
     return res.status(404).json({
       ok: false,
@@ -150,10 +151,10 @@ const validarAdminRoleOMismoOng = async (req, res, next) => {
 const validarUserOng = async (req, res, next) => {
   // l uid es el uid del token, o sea del Ong que hizo el login.
   const uid = req.uid;
-  console.log(uid);
+  console.log(`UID ONG ${uid}`);
   try {
     const ongDb = await Ong.findById(uid);
-    console.log(ongDb);
+    console.log(`ONG da BASE: ${ongDb}`);
     if (!ongDb) {
       return res.status(404).json({
         ok: false,

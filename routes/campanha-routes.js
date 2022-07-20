@@ -5,6 +5,7 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 const {
     getCampanhas,
+    getCampanha,
     createCampanha,
     updateCampanha,
     deleteCampanha,
@@ -15,11 +16,12 @@ const { validarJWT, validarUserOng} = require("../middlewares/validar-jwt");
 const router = Router();
 
 router.get("/", validarJWT, getCampanhas);
+router.get("/:uid", validarJWT, getCampanha);
 router.post(
   "/",
   [
     validarJWT,
-    check("nombre", "O nome da Campanha é necessario").not().isEmpty(),
+    check("nome", "O nome da Campanha é necessario").not().isEmpty(),
     validarCampos,
     validarUserOng
   ],

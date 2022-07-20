@@ -24,7 +24,7 @@ app.use("/usuario/login", require("./routes/auth-routes"));
 app.use("/api/ong/login", require("./routes/auth-ong-routes"));
 app.use("/api/upload", require("./routes/upload-routes"));
 app.use("/api/ong", require("./routes/ong-routes"));
-app.use("/api/campanha", require("./routes/campanha-routes"));
+app.use("/campanha", require("./routes/campanha-routes"));
 app.use(bodyParser.json())
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
