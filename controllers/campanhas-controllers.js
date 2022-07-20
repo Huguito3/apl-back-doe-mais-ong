@@ -5,7 +5,18 @@ const Campanha = require("../models/campanha");
 const Usuario = require("../models/usuario");
 
 const getCampanhas = async (req, res = response) => {
+  const uid = req.uid;
   const campanhas = await Campanha.find().populate("ong", "nombre image");
+  const usuarioDB = await Usuario.findById(uid);
+
+  var arrayLength = campanhas.length;
+  for (var i = 0; i < arrayLength; i++) {
+    if (usuarioDB?.apoios?.includes(campanhas[i]._id)) {
+      campanhas[i].apoio = true;
+    }
+
+    //Do something
+  }
 
   res.json({
     ok: true,
@@ -15,15 +26,23 @@ const getCampanhas = async (req, res = response) => {
 
 const getCampanha = async (req, res = response) => {
   const _id = req.params.uid;
+  const uid = req.uid;
   // const campanha = await Campanha.find().populate("ong", "nombre image");
   try {
     const campanha = await Campanha.findById(_id);
+
     if (!campanha) {
       res.status(404).json({
         ok: false,
         msg: "El Id no correspodne a una campanha de la base",
       });
     }
+    const usuarioDB = await Usuario.findById(uid);
+
+    if (usuarioDB?.apoios?.includes(campanha._id)) {
+      campanha.apoio = true;
+    }
+
     res.json({
       ok: true,
       campanha,
