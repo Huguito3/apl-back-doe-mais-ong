@@ -9,7 +9,8 @@ const {
     createCampanha,
     updateCampanha,
     deleteCampanha,
-    apoiarCampanha
+    apoiarCampanha,
+    intereseCampanhaUsuario
 } = require("../controllers/campanhas-controllers");
 
 const { validarCampos } = require("../middlewares/validar-campos");
@@ -48,6 +49,8 @@ router.put(
   ],
   updateCampanha
 );
+
+router.get("/interesses", validarJWT, intereseCampanhaUsuario);
 
 router.delete("/:uid", validarJWT, deleteCampanha);
 

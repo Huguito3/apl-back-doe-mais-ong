@@ -7,7 +7,7 @@ const getOngs = async (req, res) => {
   const desde = Number(req.query.desde) || 0;
   
   const [Ongs, total] = await Promise.all([
-    Ong.find({}, "nombre email role google image").skip(desde).limit(5),
+    Ong.find(),
     Ong.countDocuments(),
   ]);
   res.json({

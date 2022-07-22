@@ -23,7 +23,7 @@ app.use("/usuario", require("./routes/usuarios-routes"));
 app.use("/usuario/login", require("./routes/auth-routes"));
 app.use("/api/ong/login", require("./routes/auth-ong-routes"));
 app.use("/imagens", require("./routes/upload-routes"));
-app.use("/api/ong", require("./routes/ong-routes"));
+app.use("/ong", require("./routes/ong-routes"));
 app.use("/campanha", require("./routes/campanha-routes"));
 app.use(bodyParser.json())
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
