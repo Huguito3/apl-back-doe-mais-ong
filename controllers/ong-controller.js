@@ -13,7 +13,6 @@ const getOngs = async (req, res) => {
   res.json({
     ok: true,
     Ongs,
-    uid: req.uid,
     total,
   });
 };

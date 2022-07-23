@@ -2,6 +2,7 @@ const fs = require("fs");
 
 const Usuario = require("../models/usuario");
 const Campanha = require("../models/campanha");
+const Ong = require("../models/ong");
 
 const borrarImagen = (pathViejo) => {
   if (fs.existsSync(pathViejo)) {
@@ -11,7 +12,8 @@ const borrarImagen = (pathViejo) => {
 };
 const actualizarImagen = async (tipo, subtipo, id, nombreArchivo) => {
   let pathViejo = "";
-
+  console.log(`***TIPO: ${tipo}`);
+  console.log(`***TIPO: ${subtipo}`);
   switch (tipo) {
     case "usuarios":
       const usuario = await Usuario.findById(id);
@@ -45,6 +47,27 @@ const actualizarImagen = async (tipo, subtipo, id, nombreArchivo) => {
       }
 
       await campanha.save();
+      return true;
+      break;
+    case "ongs":
+      const ong = await Ong.findById(id);
+      console.log(ong);
+      if (!ong) {
+        console.log("Não existe essa ong");
+        return false;
+      }
+
+      if (subtipo === "avatar") {
+        if (ong.imagens.avatar) {
+          pathViejo = `./uploads/ongs/avatar/${ong.imagens.avatar}`;
+          borrarImagen(pathViejo);
+        }
+        ong.imagens.avatar = nombreArchivo;
+      } else {
+        ong.imagens.galeria.push(nombreArchivo);
+      }
+
+      await ong.save();
       return true;
       break;
     default:
