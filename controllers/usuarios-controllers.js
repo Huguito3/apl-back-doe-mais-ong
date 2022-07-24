@@ -31,6 +31,10 @@ const createUsuarios = async (req, res) => {
         msg: "O email ja esta registrado",
       });
     }
+    req.body["nascimento"] = "";
+    req.body["nome"] = "";
+    req.body["sexo"] = "";
+    req.body["contato"] = "";
     const usuario = new Usuario(req.body);
 
     //Encriptar Contrasena
@@ -39,7 +43,15 @@ const createUsuarios = async (req, res) => {
 
     await usuario.save();
 
+    //   "usuario": {
+    //     "email": "hugo5@gmail.com",
+    //     "favoritos": [],
+    //     "apoios": [],
+    //     "uid": "62dd7dd471be8b96c610ceb4"
+    // },
+
     const token = await generarJWT(usuario.id);
+
     res.json({
       ok: true,
       usuario,
@@ -113,7 +125,7 @@ const actualizarUsuarioPropio = async (req, res = response) => {
       });
     }
     const { ...campos } = req.body;
-    
+
     // campos.email = email;
     const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {
       new: true,
@@ -160,6 +172,25 @@ const getUsuario = async (req, res = response) => {
   const uid = req.uid;
   try {
     const usuario = await Usuario.findById(uid);
+
+    if(!(usuario?.sexo)){
+      usuario.sexo = "";
+    }
+
+    if(!(usuario?.nascimento)){
+      usuario.nascimento = "";
+    }
+
+    if(!(usuario?.nome)){
+      usuario.nome = "";
+    }
+
+    if(!(usuario?.contato)){
+      usuario.contato = "";
+    }
+
+
+
     res.json({
       ok: true,
       usuario,
