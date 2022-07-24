@@ -2,14 +2,12 @@ const { response } = require("express");
 const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
 const Ong = require("../models/ong");
+const Usuario = require("../models/usuario");
 
 const getOngs = async (req, res) => {
   const desde = Number(req.query.desde) || 0;
-  
-  const [Ongs, total] = await Promise.all([
-    Ong.find(),
-    Ong.countDocuments(),
-  ]);
+
+  const [Ongs, total] = await Promise.all([Ong.find(), Ong.countDocuments()]);
   res.json({
     ok: true,
     Ongs,
@@ -34,7 +32,6 @@ const createOngs = async (req, res) => {
     const salt = bcrypt.genSaltSync();
     ong.password = bcrypt.hashSync(password, salt);
 
-    
     await ong.save();
 
     const token = await generarJWT(ong.id);
@@ -78,7 +75,7 @@ const actualizarOng = async (req, res = response) => {
     // le anadimos el email modificado al objeto campos.
     if (!OngDB.google) {
       campos.email = email;
-    }else if(OngDB.email !== email){
+    } else if (OngDB.email !== email) {
       return res.status(400).json({
         ok: false,
         msg: "Ongs de Google no pueden cambiar su correo",
@@ -111,7 +108,7 @@ const borrarOng = async (req, res = response) => {
         msg: "Ong no encontrado",
       });
     }
- 
+
     await Ong.findByIdAndDelete(uid);
 
     res.json({
@@ -126,26 +123,86 @@ const borrarOng = async (req, res = response) => {
   }
 };
 
-const getOng= async (req, res = response) => {
+const getOng = async (req, res = response) => {
   const id = req.params.uid;
   try {
-    const ong = await Ong.findById(id)
+    const ong = await Ong.findById(id);
     res.json({
       ok: true,
       ong,
     });
-    
   } catch (error) {
     res.json({
       ok: false,
-      msg: 'Ong no encontrado'
+      msg: "Ong no encontrado",
     });
   }
 };
+
+const favoritarOng = async (req, res = response) => {
+  const _id = req.body.id;
+  const uid = req.uid;
+  try {
+    const ong = await Ong.findById(_id);
+    if (!ong) {
+      res.status(404).json({
+        ok: false,
+        msg: "El Id no correspodne a una ong de la base",
+      });
+    }
+
+    const usuarioDB = await Usuario.findById(uid);
+    if (!usuarioDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Usuario no encontrado",
+      });
+    }
+
+    if (usuarioDB?.favoritos?.includes(_id)) {
+      var arrayLength = usuarioDB.favoritos.length;
+      for (var i = 0; i < arrayLength; i++) {
+        if (usuarioDB.favoritos[i] == _id) {
+          usuarioDB.favoritos = usuarioDB.favoritos.splice(i, i);
+        }
+
+      }
+      // var filtered = usuarioDB.favoritos.filter((value) => {
+      //   console.log(`VALUEE: ${value}`);
+      //   console.log(`_id: ${_id}`);
+      //   return value.trim() != _id.trim();
+      // });
+      // console.log(`FILTRO: ${filtered}`);
+
+      // console.log(`FAVORITOS: ${usuarioDB.favoritos}`);
+      ong.favorito = false;
+    } else {
+      usuarioDB.favoritos.push(_id);
+      ong.favorito = true;
+    }
+
+    await Usuario.findByIdAndUpdate(uid, usuarioDB, {
+      new: true,
+    });
+
+    res.json({
+      ok: true,
+      ong,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error Inesperado.. revisar logs",
+    });
+  }
+};
+
 module.exports = {
   getOng,
   getOngs,
   createOngs,
   actualizarOng,
   borrarOng,
+  favoritarOng,
 };

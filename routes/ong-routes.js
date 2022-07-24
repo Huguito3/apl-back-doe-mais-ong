@@ -9,6 +9,7 @@ const {
   createOngs,
   actualizarOng,
   borrarOng,
+  favoritarOng,
 } = require("../controllers/ong-controller");
 
 const { validarCampos } = require("../middlewares/validar-campos");
@@ -28,6 +29,19 @@ router.post(
   ],
   createOngs
 );
+
+router.post(
+  "/favorita",
+  [
+    [
+      validarJWT,
+      check("id", "O id da ONG é necessario").not().isEmpty(),
+      validarCampos,
+    ],
+  ],
+  favoritarOng
+);
+
 
 router.put(
   "/:uid",
