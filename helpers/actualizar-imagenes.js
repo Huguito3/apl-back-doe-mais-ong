@@ -38,9 +38,12 @@ const actualizarImagen = async (tipo, subtipo, id, nombreArchivo) => {
         return false;
       }
 
-      if (subtipo === "avatar" && campanha.imagens.avatar !== "") {
-        pathViejo = `./uploads/campanhas/avatar/${campanha.imagens.avatar}`;
-        borrarImagen(pathViejo);
+      if (subtipo === "avatar" ) {
+        if(campanha.imagens.avatar){
+          pathViejo = `./uploads/campanhas/avatar/${campanha.imagens.avatar}`;
+          borrarImagen(pathViejo);
+        }
+       
         campanha.imagens.avatar = nombreArchivo;
       } else {
         campanha.imagens.galeria.push(nombreArchivo);
