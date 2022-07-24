@@ -154,7 +154,7 @@ const apoiarCampanha = async (req, res = response) => {
       });
     }
 
-    campanha.apoiadores += 1;
+    
 
     const usuarioDB = await Usuario.findById(uid);
     if (!usuarioDB) {
@@ -164,7 +164,25 @@ const apoiarCampanha = async (req, res = response) => {
       });
     }
 
-    usuarioDB.apoios.push(_id);
+
+
+    if (usuarioDB?.apoios?.includes(_id)) {
+      var arrayLength = usuarioDB.apoios.length;
+      for (var i = 0; i < arrayLength; i++) {
+        if (usuarioDB.apoios[i] == _id) {
+          usuarioDB.apoios = usuarioDB.apoios.splice(i, i);
+        }
+
+      }
+      campanha.apoio = false;
+      campanha.apoiadores -= 1;
+    } else {
+      campanha.apoio = true;
+      usuarioDB.apoios.push(_id);
+      campanha.apoiadores += 1;
+    }
+
+
     await Usuario.findByIdAndUpdate(uid, usuarioDB, {
       new: true,
     });
