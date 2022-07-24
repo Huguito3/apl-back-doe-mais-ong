@@ -5,9 +5,21 @@ const Ong = require("../models/ong");
 const Usuario = require("../models/usuario");
 
 const getOngs = async (req, res) => {
-  const desde = Number(req.query.desde) || 0;
+  // const desde = Number(req.query.desde) || 0;
+  const uid = req.uid;
+  const usuarioDB = await Usuario.findById(uid);
 
   const [Ongs, total] = await Promise.all([Ong.find(), Ong.countDocuments()]);
+
+  var arrayLength = Ongs.length;
+  for (var i = 0; i < arrayLength; i++) {
+    if (usuarioDB?.favoritos?.includes(Ongs[i]._id)) {
+      Ongs[i].favorito = true;
+    }else{
+      Ongs[i].favorito = false;
+    }
+
+  }
   res.json({
     ok: true,
     Ongs,
@@ -125,8 +137,17 @@ const borrarOng = async (req, res = response) => {
 
 const getOng = async (req, res = response) => {
   const id = req.params.uid;
+  const uid = req.uid;
   try {
     const ong = await Ong.findById(id);
+
+    const usuarioDB = await Usuario.findById(uid);
+
+    if (usuarioDB?.favoritos?.includes(ong._id)) {
+      ong.favorito = true;
+    }else{
+      ong.favorito = false;
+    }
     res.json({
       ok: true,
       ong,
@@ -178,6 +199,7 @@ const favoritarOng = async (req, res = response) => {
       ong.favorito = false;
     } else {
       usuarioDB.favoritos.push(_id);
+      console.log(`FAVORITOS: ${usuarioDB.favoritos}`);
       ong.favorito = true;
     }
 
