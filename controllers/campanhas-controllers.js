@@ -189,23 +189,19 @@ const apoiarCampanha = async (req, res = response) => {
 const intereseCampanhaUsuario = async (req, res = response) => {
   const uid = req.uid;
   try {
-    
-  const campanhas = await Campanha.find().populate("ong", "nombre image");
-  const usuarioDB = await Usuario.findById(uid);
-  const campanhasFiltradas = [];
-  var arrayLength = usuarioDB.favoritos.length;
-  // if(arrayLength > 0){
-  //   for (var i = 0; i < arrayLength; i++) {
-  // if(campanhas._id.includes(usuarioDB.favoritos[i])
-  //     if (usuarioDB?.apoios?.includes(campanhas._id)) {
-  //       campanhas[i].apoio = true;
-  //     }
-     
-  // }
+    const campanhas = await Campanha.find();
+    const usuarioDB = await Usuario.findById(uid);
+    const listaCampanhas = usuarioDB.apoios;
+    var campanhasFiltradas = [];
+    if (listaCampanhas.length > 0) {
+     campanhasFiltradas = campanhas.filter((campanha) => {
+        return listaCampanhas.includes(campanha._id);
+      });
+    }
 
     res.json({
       ok: true,
-      campanha
+      campanhas: campanhasFiltradas,
     });
   } catch (error) {
     console.log(error);
@@ -216,8 +212,6 @@ const intereseCampanhaUsuario = async (req, res = response) => {
   }
 };
 
-
-
 module.exports = {
   getCampanhas,
   getCampanha,
@@ -225,5 +219,5 @@ module.exports = {
   updateCampanha,
   deleteCampanha,
   apoiarCampanha,
-  intereseCampanhaUsuario
+  intereseCampanhaUsuario,
 };

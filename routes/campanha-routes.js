@@ -17,6 +17,7 @@ const { validarCampos } = require("../middlewares/validar-campos");
 const { validarJWT, validarUserOng} = require("../middlewares/validar-jwt");
 const router = Router();
 
+router.get("/interesses", validarJWT, intereseCampanhaUsuario);
 router.get("/", validarJWT, getCampanhas);
 router.get("/:uid", validarJWT, getCampanha);
 router.post(
@@ -50,7 +51,6 @@ router.put(
   updateCampanha
 );
 
-router.get("/interesses", validarJWT, intereseCampanhaUsuario);
 
 router.delete("/:uid", validarJWT, deleteCampanha);
 
