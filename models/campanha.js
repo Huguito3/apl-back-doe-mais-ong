@@ -7,6 +7,10 @@ const CampanhaSchema = Schema(
       type: Schema.Types.ObjectId,
       ref: "Ong",
     },
+    ongNome: {
+      type: String,
+      required: true,
+    },
     nome: {
       type: String,
       required: true,

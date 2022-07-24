@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
 const Campanha = require("../models/campanha");
 const Usuario = require("../models/usuario");
+const ONG = require("../models/ong");
 
 const getCampanhas = async (req, res = response) => {
   const uid = req.uid;
@@ -38,11 +39,13 @@ const getCampanha = async (req, res = response) => {
       });
     }
     const usuarioDB = await Usuario.findById(uid);
-
+    // const ong = await ONG.findById(campanha.ong);
     if (usuarioDB?.apoios?.includes(campanha._id)) {
       campanha.apoio = true;
     }
-
+    // campanha["ongNome"] = ong.nome;
+    // console.log(`ongNome: ${ong.nome}`);
+    // console.log(`campanha: ${campanha}`);
     res.json({
       ok: true,
       campanha,
@@ -59,8 +62,10 @@ const getCampanha = async (req, res = response) => {
 const createCampanha = async (req, res = response) => {
   //en el middleware lo estamos reobteniendo al uid a traves del token
   const uid = req.uid;
+  const ong = await ONG.findById(uid);
   const campanha = new Campanha({
     ong: uid,
+    ongNome: ong.nome,
     ...req.body,
   });
   try {
@@ -154,8 +159,6 @@ const apoiarCampanha = async (req, res = response) => {
       });
     }
 
-    
-
     const usuarioDB = await Usuario.findById(uid);
     if (!usuarioDB) {
       return res.status(404).json({
@@ -164,15 +167,12 @@ const apoiarCampanha = async (req, res = response) => {
       });
     }
 
-
-
     if (usuarioDB?.apoios?.includes(_id)) {
       var arrayLength = usuarioDB.apoios.length;
       for (var i = 0; i < arrayLength; i++) {
         if (usuarioDB.apoios[i] == _id) {
           usuarioDB.apoios = usuarioDB.apoios.splice(i, i);
         }
-
       }
       campanha.apoio = false;
       campanha.apoiadores -= 1;
@@ -181,7 +181,6 @@ const apoiarCampanha = async (req, res = response) => {
       usuarioDB.apoios.push(_id);
       campanha.apoiadores += 1;
     }
-
 
     await Usuario.findByIdAndUpdate(uid, usuarioDB, {
       new: true,
@@ -212,7 +211,7 @@ const intereseCampanhaUsuario = async (req, res = response) => {
     const listaCampanhas = usuarioDB.apoios;
     var campanhasFiltradas = [];
     if (listaCampanhas.length > 0) {
-     campanhasFiltradas = campanhas.filter((campanha) => {
+      campanhasFiltradas = campanhas.filter((campanha) => {
         return listaCampanhas.includes(campanha._id);
       });
     }

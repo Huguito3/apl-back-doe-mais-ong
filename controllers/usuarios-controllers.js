@@ -43,12 +43,7 @@ const createUsuarios = async (req, res) => {
 
     await usuario.save();
 
-    //   "usuario": {
-    //     "email": "hugo5@gmail.com",
-    //     "favoritos": [],
-    //     "apoios": [],
-    //     "uid": "62dd7dd471be8b96c610ceb4"
-    // },
+    
 
     const token = await generarJWT(usuario.id);
 
@@ -88,15 +83,6 @@ const actualizarUsuario = async (req, res = response) => {
         });
       }
     }
-    // le anadimos el email modificado al objeto campos.
-    // if (!usuarioDB.google) {
-    //   campos.email = email;
-    // }else if(usuarioDB.email !== email){
-    //   return res.status(400).json({
-    //     ok: false,
-    //     msg: "Usuarios de Google no pueden cambiar su correo",
-    //   });
-    // }
     campos.email = email;
     const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {
       new: true,
