@@ -42,7 +42,6 @@ router.post(
   favoritarOng
 );
 
-
 router.put(
   "/:uid",
   [

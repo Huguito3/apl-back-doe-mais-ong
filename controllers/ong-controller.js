@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
 const Ong = require("../models/ong");
 const Usuario = require("../models/usuario");
+const Campanha = require("../models/campanha");
 
 const getOngs = async (req, res) => {
   // const desde = Number(req.query.desde) || 0;
@@ -142,6 +143,11 @@ const getOng = async (req, res = response) => {
     const ong = await Ong.findById(id);
 
     const usuarioDB = await Usuario.findById(uid);
+    const camp = await Campanha.find();
+
+    const campanhas = camp.filter((campanha)=>{
+      return campanha.ong._id == id;
+    });
 
     if (usuarioDB?.favoritos?.includes(ong._id)) {
       ong.favorito = true;
@@ -151,6 +157,7 @@ const getOng = async (req, res = response) => {
     res.json({
       ok: true,
       ong,
+      campanhas
     });
   } catch (error) {
     res.json({
