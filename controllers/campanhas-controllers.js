@@ -7,7 +7,7 @@ const ONG = require("../models/ong");
 
 const getCampanhas = async (req, res = response) => {
   const uid = req.uid;
-  const campanhas = await Campanha.find().populate("ong", "nombre image");
+  const campanhas = await Campanha.find();
   const usuarioDB = await Usuario.findById(uid);
 
   var arrayLength = campanhas.length;

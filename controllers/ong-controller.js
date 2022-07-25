@@ -16,10 +16,9 @@ const getOngs = async (req, res) => {
   for (var i = 0; i < arrayLength; i++) {
     if (usuarioDB?.favoritos?.includes(Ongs[i]._id)) {
       Ongs[i].favorito = true;
-    }else{
+    } else {
       Ongs[i].favorito = false;
     }
-
   }
   res.json({
     ok: true,
@@ -145,19 +144,27 @@ const getOng = async (req, res = response) => {
     const usuarioDB = await Usuario.findById(uid);
     const camp = await Campanha.find();
 
-    const campanhas = camp.filter((campanha)=>{
+    const campanhas = camp.filter((campanha) => {
       return campanha.ong._id == id;
+    });
+
+    campanhas.map((campanha) => {
+      if (dateCompare(campanha.dataFinal)) {
+        ong.campanhasAtivas +=1;
+      } else {
+        ong.campanhasEncerradas+=1;
+      }
     });
 
     if (usuarioDB?.favoritos?.includes(ong._id)) {
       ong.favorito = true;
-    }else{
+    } else {
       ong.favorito = false;
     }
     res.json({
       ok: true,
       ong,
-      campanhas
+      campanhas,
     });
   } catch (error) {
     res.json({
@@ -193,16 +200,7 @@ const favoritarOng = async (req, res = response) => {
         if (usuarioDB.favoritos[i] == _id) {
           usuarioDB.favoritos = usuarioDB.favoritos.splice(i, i);
         }
-
       }
-      // var filtered = usuarioDB.favoritos.filter((value) => {
-      //   console.log(`VALUEE: ${value}`);
-      //   console.log(`_id: ${_id}`);
-      //   return value.trim() != _id.trim();
-      // });
-      // console.log(`FILTRO: ${filtered}`);
-
-      // console.log(`FAVORITOS: ${usuarioDB.favoritos}`);
       ong.favorito = false;
     } else {
       usuarioDB.favoritos.push(_id);
@@ -227,6 +225,26 @@ const favoritarOng = async (req, res = response) => {
   }
 };
 
+function dateCompare(d1) {
+  const date1 = new Date(d1);
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1; // Months start at 0!
+  let dd = today.getDate();
+
+  if (dd < 10) dd = "0" + dd;
+  if (mm < 10) mm = "0" + mm;
+
+  const formattedToday = dd + "/" + mm + "/" + yyyy;
+
+  if (date1 < formattedToday) {
+    console.log(`${date1} esta ativa ${formattedToday}`);
+    return true;
+  } else {
+    console.log(`${date1} esta desativa ${formattedToday}`);
+    return false;
+  }
+}
 module.exports = {
   getOng,
   getOngs,
