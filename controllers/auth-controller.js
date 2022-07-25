@@ -61,4 +61,48 @@ const renewToken = async (req, res = response) => {
   });
 };
 
-module.exports = { login, renewToken };
+const changePassword = async (req, res = response) => {
+  const { email, senhaAtual, novaSenha } = req.body;
+  const uid = req.uid;
+console.log('CHANGE PASSWORD');
+  try {
+    const usuarioDB = await Usuario.findOne({ email });
+    if (!usuarioDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Email o contraseña invalida",
+      });
+    }
+    console.log(usuarioDB);
+    //Verificar Contrasena
+    const validsenha = bcrypt.compareSync(senhaAtual, usuarioDB.senha);
+
+    if (!validsenha) {
+      return res.status(400).json({
+        ok: false,
+        msg: "contrasena no valida",
+      });
+    }
+
+    //Encriptar Contrasena
+    const salt = bcrypt.genSaltSync();
+    const senhaalter = bcrypt.hashSync(novaSenha, salt);
+    const update = { senha: senhaalter };
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, update, {
+      new: true,
+    });
+    const token = await generarJWT(usuarioDB.id);
+    res.json({
+      ok: true,
+      // usuario: usuarioActualizado,
+      token
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error Inesperado.. revisar logs",
+    });
+  }
+};
+module.exports = { login, renewToken, changePassword };

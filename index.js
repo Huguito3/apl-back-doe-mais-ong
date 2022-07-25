@@ -21,7 +21,7 @@ app.use(express.static("public"));
 //Rutas
 app.use("/usuario", require("./routes/usuarios-routes"));
 app.use("/categorias", require("./routes/categorias-routes"));
-app.use("/usuario/login", require("./routes/auth-routes"));
+app.use("/usuario/login", require("./routes/auth-routes"));;
 app.use("/api/ong/login", require("./routes/auth-ong-routes"));
 app.use("/imagens", require("./routes/upload-routes"));
 app.use("/ong", require("./routes/ong-routes"));
