@@ -13,13 +13,30 @@ const getOngs = async (req, res) => {
   const [Ongs, total] = await Promise.all([Ong.find(), Ong.countDocuments()]);
 
   var arrayLength = Ongs.length;
+  const camp = await Campanha.find();
+
   for (var i = 0; i < arrayLength; i++) {
+    
     if (usuarioDB?.favoritos?.includes(Ongs[i]._id)) {
       Ongs[i].favorito = true;
     } else {
       Ongs[i].favorito = false;
     }
+    const campanhas = camp.filter((campanha) => {
+     
+      return campanha.ong._id.toString().trim() == Ongs[i]._id.toString().trim();
+    });
+    campanhas?.map((campanha) => {
+      if (dateCompare(campanha.dataFinal)) {
+        Ongs[i].campanhasAtivas += 1;
+      } else {
+        Ongs[i].campanhasEncerradas += 1;
+      }
+    });
   }
+
+ 
+
   res.json({
     ok: true,
     Ongs,
@@ -145,14 +162,16 @@ const getOng = async (req, res = response) => {
     const camp = await Campanha.find();
 
     const campanhas = camp.filter((campanha) => {
-      return campanha.ong._id == id;
+      return campanha.ong._id.toString().trim() == id.toString().trim();
     });
 
-    campanhas.map((campanha) => {
+    campanhas?.map((campanha) => {
       if (dateCompare(campanha.dataFinal)) {
-        ong.campanhasAtivas +=1;
+        console.log(`ATIVA ${campanha.dataFinal}`);
+        ong.campanhasAtivas += 1;
       } else {
-        ong.campanhasEncerradas+=1;
+        console.log(`DESATIVA ${campanha.dataFinal}`);
+        ong.campanhasEncerradas += 1;
       }
     });
 
@@ -226,22 +245,30 @@ const favoritarOng = async (req, res = response) => {
 };
 
 function dateCompare(d1) {
-  const date1 = new Date(d1);
+  const dataFinal = d1.split("/");
   const today = new Date();
-  const yyyy = today.getFullYear();
-  let mm = today.getMonth() + 1; // Months start at 0!
-  let dd = today.getDate();
+  const yyyytoday = today.getFullYear();
+  let mmtoday = today.getMonth() + 1; // Months start at 0!
+  let ddtoday = today.getDate();
+  const yyyydataFinal = dataFinal[2];
+  let mmdataFinal = dataFinal[1];
+  let dddataFinal = dataFinal[0];
 
-  if (dd < 10) dd = "0" + dd;
-  if (mm < 10) mm = "0" + mm;
-
-  const formattedToday = dd + "/" + mm + "/" + yyyy;
-
-  if (date1 < formattedToday) {
-    console.log(`${date1} esta ativa ${formattedToday}`);
+  if (yyyydataFinal > yyyytoday) {
     return true;
+  } else if (yyyydataFinal == yyyytoday) {
+    if (mmdataFinal > mmtoday) {
+      return true;
+    } else if (mmdataFinal == mmtoday) {
+      if (dddataFinal >= ddtoday) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   } else {
-    console.log(`${date1} esta desativa ${formattedToday}`);
     return false;
   }
 }
